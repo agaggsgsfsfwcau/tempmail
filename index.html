@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Temp Mail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #3f37c9;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --success: #4cc9f0;
+      --warning: #f8961e;
+      --error: #f94144;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--light);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode {
+      background: var(--dark);
+      color: var(--light);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .dark-mode h1 {
+      color: var(--success);
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode .card {
+      background: #16213e;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .email-display {
+      font-size: 1.2rem;
+      margin: 15px 0;
+      padding: 12px;
+      background: rgba(67, 97, 238, 0.1);
+      border-radius: 8px;
+      word-break: break-word;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dark-mode .email-display {
+      background: rgba(76, 201, 240, 0.1);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    button {
+      font-family: 'Roboto', sans-serif;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .dark-mode button {
+      background: var(--success);
+      color: var(--dark);
+    }
+
+    .dark-mode button:hover {
+      background: #3ab7d8;
+    }
+
+    button.outlined {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .dark-mode button.outlined {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .email-box {
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .email-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .dark-mode .email-box:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .email-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 500;
+      align-items: center;
+    }
+
+    .email-subject {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dark-mode .email-subject {
+      color: var(--success);
+    }
+
+    .email-content {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      max-height: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .email-full-content {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      overflow: auto;
+      max-height: 400px;
+    }
+
+    .dark-mode .email-content,
+    .dark-mode .email-full-content {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .email-date {
+      color: var(--gray);
+      font-size: 0.85rem;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .empty-inbox {
+      text-align: center;
+      padding: 30px;
+      color: var(--gray);
+      font-style: italic;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--primary);
+      color: white;
+      margin-left: 8px;
+      gap: 4px;
+    }
+
+    .dark-mode .badge {
+      background: var(--success);
+      color: var(--dark);
+    }
+
+    .badge.warning {
+      background: var(--warning);
+      color: white;
+    }
+
+    .badge.error {
+      background: var(--error);
+      color: white;
+    }
+
+    .material-icons {
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+
+    .snackbar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .snackbar.show {
+      opacity: 1;
+    }
+
+    .snackbar.success {
+      background: var(--success);
+      color: var(--dark);
+    }
+
+    .snackbar.error {
+      background: var(--error);
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .dark-mode .progress {
+      background: var(--success);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .dark-mode .avatar {
+      background: var(--success);
+      color: var(--dark);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      .controls {
+        flex-direction: column;
+      }
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <span class="material-icons">email</span>
+        Temp Mail
+      </h1>
+      <p>Disposable Email Service</p>
+    </div>
+
+    <div class="card">
+      <h2>Your Temporary Email</h2>
+      <div class="email-display" id="email">
+        <span>Generating your email address...</span>
+        <button class="outlined" onclick="copyEmail(event)" style="padding: 6px 12px;">
+          <span class="material-icons">content_copy</span>
+          Copy
+        </button>
+      </div>
+
+      <div class="controls">
+        <button onclick="refreshInbox()">
+          <span class="material-icons">refresh</span>
+          Refresh Inbox
+        </button>
+        <button onclick="generateRandomMail()">
+          <span class="material-icons">add</span>
+          New Email
+        </button>
+        <button onclick="toggleDarkMode()">
+          <span class="material-icons">brightness_4</span>
+          Toggle Theme
+        </button>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress" id="refreshProgress"></div>
+      </div>
+      <p>Inbox auto-refreshes every 15 seconds <span class="badge"><span class="material-icons">flash_on</span> Live</span></p>
+    </div>
+
+    <div class="card">
+      <h2>Inbox Messages</h2>
+      <div id="inbox">
+        <div class="empty-inbox">Loading your messages...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="snackbar" id="snackbar">
+    <span class="material-icons" id="snackbarIcon">check_circle</span>
+    <span id="snackbarMessage">Success!</span>
+  </div>
+
+  <audio id="notifySound" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" preload="auto"></audio>
+
+  <script>
+    let email = '';
+    let password = '';
+    let token = '';
+    let lastMessageIds = [];
+    let autoRefreshInterval = null;
+    let refreshTimeout = null;
+    let progressInterval = null;
+
+    // Load saved state from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load dark mode preference
+      if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        const icon = document.querySelector('button[onclick="toggleDarkMode()"] .material-icons');
+        if (icon) icon.textContent = 'brightness_7';
+      }
+
+      // Load email if exists
+      const savedEmail = localStorage.getItem('tempMailEmail');
+      const savedToken = localStorage.getItem('tempMailToken');
+      
+      if (savedEmail && savedToken) {
+        email = savedEmail;
+        token = savedToken;
+        document.getElementById('email').innerHTML = `
+          <span>${email}</span>
+          <button class="outlined" onclick="copyEmail(event)" style="padding: 6px 12px;">
+            <span class="material-icons">content_copy</span>
+            Copy
+          </button>
+        `;
+        refreshInbox();
+        startAutoRefresh();
+      } else {
+        generateRandomMail();
+      }
+    });
+
+    async function generateRandomMail() {
+      try {
+        showLoading('Creating your temporary email...');
+        if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+        if (progressInterval) clearInterval(progressInterval);
+        document.getElementById('inbox').innerHTML = '<div class="empty-inbox">Loading your messages...</div>';
+
+        // First, try to get available domains
+        const domainsRes = await fetch('https://api.mail.tm/domains');
+        if (!domainsRes.ok) {
+          throw new Error('Failed to fetch domains');
+        }
+        
+        const domainsData = await domainsRes.json();
+        const availableDomains = domainsData['hydra:member'];
+        
+        if (!availableDomains || availableDomains.length === 0) {
+          throw new Error('No domains available');
+        }
+        
+        // Select the first available domain
+        const domain = availableDomains[0].domain;
+        const randomString = Math.random().toString(36).substring(2, 10);
+        email = `${randomString}@${domain}`;
+        password = generateStrongPassword();
+
+        // Create the account
+        const accountRes = await fetch('https://api.mail.tm/accounts', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ address: email, password })
+        });
+        
+        if (!accountRes.ok) {
+          const errorData = await accountRes.json();
+          throw new Error(errorData.message || 'Account creation failed');
+        }
+
+        // Get the token
+        const loginRes = await fetch('https://api.mail.tm/token', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ address: email, password })
+        });
+        
+        if (!loginRes.ok) {
+          const errorData = await loginRes.json();
+          throw new Error(errorData.message || 'Login failed');
+        }
+        
+        const loginData = await loginRes.json();
+        token = loginData.token;
+
+        // Save to localStorage
+        localStorage.setItem('tempMailEmail', email);
+        localStorage.setItem('tempMailToken', token);
+
+        document.getElementById('email').innerHTML = `
+          <span>${email}</span>
+          <button class="outlined" onclick="copyEmail(event)" style="padding: 6px 12px;">
+            <span class="material-icons">content_copy</span>
+            Copy
+          </button>
+        `;
+        
+        showSnackbar('Email created successfully!', 'success');
+        refreshInbox();
+        startAutoRefresh();
+
+      } catch (error) {
+        console.error('Error generating email:', error);
+        showSnackbar(`Error: ${error.message || 'Failed to create email'}`, 'error');
+        
+        // Fallback to a hardcoded domain if API fails
+        if (error.message.includes('domains') || error.message.includes('domain')) {
+          showSnackbar('Using fallback domain', 'warning');
+          const fallbackDomain = 'mail.tm';
+          const randomString = Math.random().toString(36).substring(2, 10);
+          email = `${randomString}@${fallbackDomain}`;
+          password = generateStrongPassword();
+          
+          // Try to proceed with the fallback domain
+          try {
+            const loginRes = await fetch('https://api.mail.tm/token', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ address: email, password })
+            });
+            
+            if (loginRes.ok) {
+              const loginData = await loginRes.json();
+              token = loginData.token;
+              localStorage.setItem('tempMailEmail', email);
+              localStorage.setItem('tempMailToken', token);
+              document.getElementById('email').innerHTML = `
+                <span>${email}</span>
+                <button class="outlined" onclick="copyEmail(event)" style="padding: 6px 12px;">
+                  <span class="material-icons">content_copy</span>
+                  Copy
+                </button>
+              `;
+              refreshInbox();
+              startAutoRefresh();
+            }
+          } catch (fallbackError) {
+            showSnackbar('Failed to use fallback domain', 'error');
+          }
+        }
+      }
+    }
+
+    function startAutoRefresh() {
+      if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+      if (progressInterval) clearInterval(progressInterval);
+      
+      autoRefreshInterval = setInterval(refreshInbox, 15000);
+      
+      // Animate progress bar
+      const progressBar = document.getElementById('refreshProgress');
+      progressBar.style.width = '100%';
+      progressBar.style.transition = 'width 15s linear';
+      
+      setTimeout(() => {
+        progressBar.style.width = '0%';
+        progressBar.style.transition = 'none';
+        setTimeout(() => {
+          progressBar.style.transition = 'width 15s linear';
+        }, 10);
+      }, 15000);
+    }
+
+    async function refreshInbox() {
+      if (!token) return;
+      
+      try {
+        const inboxRes = await fetch('https://api.mail.tm/messages', {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!inboxRes.ok) {
+          // If unauthorized, try to get a new token
+          if (inboxRes.status === 401) {
+            await refreshToken();
+            return refreshInbox(); // Retry after token refresh
+          }
+          throw new Error(`HTTP error! status: ${inboxRes.status}`);
+        }
+
+        const inboxData = await inboxRes.json();
+        const messages = inboxData['hydra:member'] || [];
+        const inboxDiv = document.getElementById('inbox');
+
+        const newMessageIds = messages.map(m => m.id);
+        const hasNew = newMessageIds.some(id => !lastMessageIds.includes(id));
+        if (hasNew && lastMessageIds.length > 0) {
+          document.getElementById('notifySound').play();
+          showSnackbar('New message received!', 'success');
+        }
+        lastMessageIds = newMessageIds;
+
+        if (messages.length === 0) {
+          inboxDiv.innerHTML = '<div class="empty-inbox">Your inbox is empty. Share your temporary email to receive messages.</div>';
+          return;
+        }
+
+        // Sort messages by date (newest first)
+        messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        inboxDiv.innerHTML = messages.map(msg => `
+          <div class="email-box">
+            <div class="email-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="avatar">${msg.from?.name?.charAt(0) || '?'}</div>
+                <span>${msg.from?.address || 'Unknown'}</span>
+              </div>
+              <span class="email-date">
+                <span class="material-icons" style="font-size: 1rem;">schedule</span>
+                ${formatDate(msg.createdAt)}
+              </span>
+            </div>
+            <div class="email-subject">
+              <span class="material-icons">email</span>
+              ${msg.subject || '(No Subject)'}
+            </div>
+            <div class="email-content">${msg.intro || 'Preview not available'}</div>
+            <button onclick="showFullMessage('${msg.id}', this)">
+              <span class="material-icons">fullscreen</span>
+              View Full Message
+            </button>
+            <div id="msg-${msg.id}" style="display:none;"></div>
+          </div>`).join('');
+
+      } catch (err) {
+        console.error('Inbox Error:', err);
+        showSnackbar('Error refreshing inbox. Retrying...', 'error');
+        
+        // If token is invalid, clear storage and generate new email
+        if (err.message.includes('401')) {
+          localStorage.removeItem('tempMailEmail');
+          localStorage.removeItem('tempMailToken');
+          generateRandomMail();
+        }
+      }
+    }
+
+    async function refreshToken() {
+      try {
+        if (!email || !password) {
+          throw new Error('No credentials available to refresh token');
+        }
+        
+        const loginRes = await fetch('https://api.mail.tm/token', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ address: email, password })
+        });
+        
+        if (!loginRes.ok) {
+          throw new Error('Token refresh failed');
+        }
+        
+        const loginData = await loginRes.json();
+        token = loginData.token;
+        localStorage.setItem('tempMailToken', token);
+        showSnackbar('Session refreshed', 'success');
+        return true;
+      } catch (err) {
+        console.error('Token refresh error:', err);
+        showSnackbar('Session expired. Generating new email...', 'error');
+        generateRandomMail();
+        return false;
+      }
+    }
+
+    async function showFullMessage(id, btn) {
+      try {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="material-icons">hourglass_top</span> Loading...';
+        btn.disabled = true;
+
+        const res = await fetch(`https://api.mail.tm/messages/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401) {
+            await refreshToken();
+            return showFullMessage(id, btn); // Retry after token refresh
+          }
+          throw new Error('Failed to fetch message');
+        }
+
+        const data = await res.json();
+        const msgDiv = document.getElementById(`msg-${id}`);
+        
+        // Create a safe preview of the content
+        let content = data.text || data.html || 'No content available';
+        if (data.html) {
+          // For HTML content, we'll create a sandboxed iframe
+          const iframe = document.createElement('iframe');
+          iframe.sandbox = 'allow-same-origin';
+          iframe.style.width = '100%';
+          iframe.style.height = '400px';
+          iframe.style.border = 'none';
+          iframe.style.backgroundColor = 'transparent';
+          iframe.srcdoc = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  padding: 15px;
+                  margin: 0;
+                  background-color: transparent;
+                }
+              </style>
+            </head>
+            <body>
+              ${data.html}
+            </body>
+            </html>
+          `;
+          
+          // Clear previous content and append iframe
+          msgDiv.innerHTML = '';
+          msgDiv.appendChild(iframe);
+        } else {
+          // For plain text, just display with proper formatting
+          msgDiv.innerHTML = `
+            <div class="email-full-content">
+              ${content.replace(/\n/g, '<br>')}
+            </div>
+          `;
+        }
+        
+        msgDiv.style.display = 'block';
+        btn.innerHTML = '<span class="material-icons">fullscreen_exit</span> Hide Message';
+        btn.onclick = function() {
+          toggleMessageDisplay(id, btn, originalText);
+        };
+        
+      } catch (err) {
+        console.error('Error loading message:', err);
+        showSnackbar('Error loading message', 'error');
+        btn.innerHTML = originalText;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function toggleMessageDisplay(id, btn, originalText) {
+      const msgDiv = document.getElementById(`msg-${id}`);
+      if (msgDiv.style.display === 'none') {
+        msgDiv.style.display = 'block';
+        btn.innerHTML = '<span class="material-icons">fullscreen_exit</span> Hide Message';
+      } else {
+        msgDiv.style.display = 'none';
+        btn.innerHTML = originalText;
+        btn.onclick = function() {
+          showFullMessage(id, btn);
+        };
+      }
+    }
+
+    function copyEmail(e) {
+      if (!email) return;
+      navigator.clipboard.writeText(email).then(() => {
+        showSnackbar('Email copied to clipboard!', 'success');
+      }).catch(err => {
+        showSnackbar('Failed to copy email', 'error');
+      });
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.querySelector('button[onclick="toggleDarkMode()"] .material-icons');
+      icon.textContent = document.body.classList.contains('dark-mode') ? 'brightness_7' : 'brightness_4';
+      
+      // Save preference to localStorage
+      if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        localStorage.removeItem('darkMode');
+      }
+    }
+
+    function formatDate(date) {
+      return new Date(date).toLocaleString();
+    }
+
+    function generateStrongPassword() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+      return Array.from({ length: 16 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    function showLoading(msg) {
+      document.getElementById('inbox').innerHTML = `<div class="empty-inbox">${msg}</div>`;
+    }
+
+    function showSnackbar(msg, type = 'success') {
+      const snackbar = document.getElementById('snackbar');
+      const icon = document.getElementById('snackbarIcon');
+      const message = document.getElementById('snackbarMessage');
+      
+      // Set appropriate icon based on type
+      if (type === 'success') {
+        icon.textContent = 'check_circle';
+      } else if (type === 'error') {
+        icon.textContent = 'error';
+      } else if (type === 'warning') {
+        icon.textContent = 'warning';
+      } else {
+        icon.textContent = 'info';
+      }
+      
+      snackbar.className = 'snackbar';
+      snackbar.classList.add(type);
+      message.textContent = msg;
+      
+      snackbar.classList.add('show');
+      setTimeout(() => {
+        snackbar.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
